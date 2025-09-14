@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Hub - Business Requirements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A thematic, single-page vertical scrolling application. The structure guides the user through a narrative: starting with the high-level vision, defining the core industry problem, presenting our four-part solution, detailing each product division in an interactive tabbed view, visualizing our competitive edge with a dynamic chart, and outlining the implementation roadmap. This structure was chosen to make a dense business document easily digestible and to logically connect the problem with our phased solution, enhancing stakeholder understanding and engagement. -->
+    <!-- Visualization & Content Choices: 
+        - The Problem: Goal: Inform. Method: Four interactive info cards. Interaction: Hover effects to engage the user. Justification: Clearly isolates each pain point for easy comprehension.
+        - The Solution/Divisions: Goal: Organize & Inform. Method: Tabbed interface. Interaction: Clicking tabs reveals detailed feature descriptions and simple CSS mockups. Justification: Prevents information overload by allowing users to explore each of the four complex divisions one at a time.
+        - Competitive Analysis: Goal: Compare. Method: Chart.js Bar Chart. Interaction: Clicking a competitor's bar updates a text area with a detailed breakdown. Justification: Transforms a static table into an interactive data exploration tool, making comparisons more dynamic and memorable.
+        - Roadmap: Goal: Show Change. Method: CSS-based timeline. Interaction: Hover effects and clear visual progression. Justification: Provides a simple, at-a-clance overview of the project's phased rollout. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F4;
+            color: #374151;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        .nav-link {
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #0D9488;
+        }
+        .tab-btn {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .active-tab {
+            border-color: #14B8A6;
+            color: #14B8A6;
+        }
+        .phase-connector {
+            background-color: #D1D5DB;
+            height: 2px;
+            flex-grow: 1;
+        }
+        .phase-node {
+            transition: all 0.3s ease;
+        }
+        .phase-node.active, .phase-node:hover {
+            background-color: #14B8A6;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.4);
+        }
+        .problem-card:hover .problem-icon {
+            transform: scale(1.15);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-stone-100/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-teal-600">Creative Hub BRD</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#problem" class="text-gray-600 nav-link font-medium">The Problem</a>
+                <a href="#solution" class="text-gray-600 nav-link font-medium">Our Solution</a>
+                <a href="#perfect-platform" class="text-gray-600 nav-link font-medium">Features</a>
+                <a href="#competitors" class="text-gray-600 nav-link font-medium">Competitive Edge</a>
+                <a href="#roadmap" class="text-gray-600 nav-link font-medium">Roadmap</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#problem" class="block py-2 px-4 text-sm text-gray-700 hover:bg-teal-50">The Problem</a>
+            <a href="#solution" class="block py-2 px-4 text-sm text-gray-700 hover:bg-teal-50">Our Solution</a>
+            <a href="#perfect-platform" class="block py-2 px-4 text-sm text-gray-700 hover:bg-teal-50">Features</a>
+            <a href="#competitors" class="block py-2 px-4 text-sm text-gray-700 hover:bg-teal-50">Competitive Edge</a>
+            <a href="#roadmap" class="block py-2 px-4 text-sm text-gray-700 hover:bg-teal-50">Roadmap</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="hero" class="text-center py-16">
+            <h2 class="text-6xl font-extrabold text-gray-800 leading-tight tracking-tight drop-shadow-md">The All-in-One Creative Hub</h2>
+            <p class="mt-4 text-xl text-gray-600 max-w-4xl mx-auto">An integrated ecosystem for creative professionals to showcase their process, build community, monetize their talent, and find their next opportunity.</p>
+        </section>
+
+        <section id="problem" class="py-16">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-bold text-gray-800">The Core Problem</h3>
+                <p class="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">Today's creative industry runs on a disconnected and inefficient digital workflow. We've identified four key areas where existing platforms fall short, creating friction for artists and recruiters alike.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="problem-card bg-stone-200 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <div class="problem-icon text-5xl mb-4 text-amber-600 transition-transform duration-300">🖼️</div>
+                    <h4 class="text-2xl font-semibold mb-2 text-gray-800">Static Portfolios</h4>
+                    <p class="text-gray-700">Platforms like Behance and Dribbble are great for final images, but they fail to show the crucial "how"—the process, skills, and problem-solving that clients and recruiters need to see. The artist's journey remains hidden.</p>
+                </div>
+                <div class="problem-card bg-stone-200 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <div class="problem-icon text-5xl mb-4 text-amber-600 transition-transform duration-300">💰</div>
+                    <h4 class="text-2xl font-semibold mb-2 text-gray-800">Scattered Monetization</h4>
+                    <p class="text-gray-700">Artists sell assets on one site, find freelance work on another, and teach on a third. There's no single, trusted platform that connects their portfolio directly to their income, creating a disjointed revenue stream.</p>
+                </div>
+                <div class="problem-card bg-stone-200 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <div class="problem-icon text-5xl mb-4 text-amber-600 transition-transform duration-300">👥</div>
+                    <h4 class="text-2xl font-semibold mb-2 text-gray-800">Generic Networking</h4>
+                    <p class="text-gray-700">LinkedIn is too broad. Creatives lack a niche community that understands their specific software, workflows, and industry challenges, making meaningful connection difficult and time-consuming.</p>
+                </div>
+                <div class="problem-card bg-stone-200 p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:scale-105">
+                    <div class="problem-icon text-5xl mb-4 text-amber-600 transition-transform duration-300">🔍</div>
+                    <h4 class="text-2xl font-semibold mb-2 text-gray-800">Inefficient Hiring</h4>
+                    <p class="text-gray-700">Recruiters waste time manually sifting through portfolios. It's nearly impossible to search for an artist based on demonstrated skills with specific tools, leading to mismatched talent and lost opportunities.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="py-16">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-bold text-gray-800">Our Solution: A Phased, Integrated Ecosystem</h3>
+                <p class="mt-3 text-lg text-gray-600 max-w-3xl mx-auto">We will solve these problems by building four interconnected product divisions. Each division is a powerful solution on its own, but together they create an indispensable ecosystem. Explore our plan by clicking through the tabs below.</p>
+            </div>
+
+            <div>
+                <div class="border-b-2 border-gray-300 mb-8 flex justify-center overflow-x-auto">
+                    <nav class="-mb-0.5 flex space-x-4 md:space-x-8" aria-label="Tabs">
+                        <button class="tab-btn whitespace-nowrap py-4 px-3 md:px-6 border-b-2 font-medium text-lg text-gray-500 hover:text-teal-600 hover:border-teal-600 active-tab" data-tab="portfolio">1. The Core Portfolio</button>
+                        <button class="tab-btn whitespace-nowrap py-4 px-3 md:px-6 border-b-2 font-medium text-lg text-gray-500 hover:text-teal-600 hover:border-teal-600" data-tab="community">2. The Community Hub</button>
+                        <button class="tab-btn whitespace-nowrap py-4 px-3 md:px-6 border-b-2 font-medium text-lg text-gray-500 hover:text-teal-600 hover:border-teal-600" data-tab="marketplace">3. The Talent Marketplace</button>
+                        <button class="tab-btn whitespace-nowrap py-4 px-3 md:px-6 border-b-2 font-medium text-lg text-gray-500 hover:text-teal-600 hover:border-teal-600" data-tab="jobs">4. The Job Hub</button>
+                    </nav>
+                </div>
+
+                <div id="tab-content" class="min-h-[400px]">
+                    <div class="tab-pane active" id="portfolio">
+                        <div class="grid md:grid-cols-2 gap-12 items-center">
+                            <div>
+                                <h4 class="text-3xl font-bold text-teal-700 mb-4">Phase 1: The Core Portfolio (MVP)</h4>
+                                <p class="text-gray-600 mb-6">Our journey begins by solving the biggest problem: the static portfolio. We will create a unique, process-driven showcase that allows artists to tell the full story behind their work, highlighting their skills and problem-solving abilities. This will be the foundation for everything else.</p>
+                                <ul class="space-y-4">
+                                    <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">The Breakdown Panel:</strong> A dynamic, modular editor for artists to detail each step of their process with images, videos, and text.</div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Rich Tagging:</strong> The ability to tag each step with specific software and skills (e.g., #Blender, #Rigging), creating a searchable database of talent.</div>
+                                    </li>
+                                     <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Analytics Dashboard:</strong> Simple, powerful stats so creators can see how users are engaging with their project breakdowns.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                                 <div class="bg-gray-200 h-48 rounded-md flex items-center justify-center font-semibold text-gray-500 text-sm">FINAL SHOT: Polished Image or Video</div>
+                                 <div class="p-4 bg-stone-50 rounded-b-lg -m-4 mt-4">
+                                     <h5 class="font-bold text-lg text-gray-800">Project: Sci-fi Cityscape</h5>
+                                     <div class="mt-4 space-y-4">
+                                         <div class="bg-gray-100 p-4 rounded-md">
+                                             <p class="font-semibold text-gray-700">Step 1: Concept & Moodboard</p>
+                                             <p class="text-sm text-gray-500 mt-1">Gathered inspiration and created initial sketches to define the visual direction and atmosphere.</p>
+                                         </div>
+                                         <div class="bg-gray-100 p-4 rounded-md">
+                                             <p class="font-semibold text-gray-700">Step 2: 3D Blockout & Asset Creation</p>
+                                             <p class="text-sm text-gray-500 mt-1">Built core geometry in <strong class="text-teal-600">#Blender</strong> and sculpted key assets in <strong class="text-teal-600">#ZBrush</strong>.</p>
+                                         </div>
+                                     </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane hidden" id="community">
+                        <div class="grid md:grid-cols-2 gap-12 items-center">
+                             <div>
+                                <h4 class="text-3xl font-bold text-teal-700 mb-4">Phase 2: The Community Hub</h4>
+                                <p class="text-gray-600 mb-6">With a strong portfolio tool in place, we will build a social layer to foster a specialized, highly-engaged community. This will be the go-to place for peer feedback and professional connection, moving beyond generic social feeds.</p>
+                                <ul class="space-y-4">
+                                    <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Personalized Feed:</strong> A curated feed showing relevant projects and updates from artists users follow, making discovery seamless.</div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">In-line Commenting:</strong> Allow users to comment on specific steps of a breakdown for targeted, constructive critiques.</div>
+                                    </li>
+                                     <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Community Forums:</strong> Dedicated spaces for technical discussions, career advice, and specific software help, segmented by discipline.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                             <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                                 <div class="p-4 border-b pb-4 bg-stone-50 -m-4 rounded-t-lg">
+                                     <p class="font-semibold text-gray-700">John Doe posted a new breakdown:</p>
+                                     <div class="mt-2 bg-gray-200 p-3 rounded-md text-sm text-gray-500">Project: Retro Spaceship Model</div>
+                                 </div>
+                                 <div class="p-4 mt-4 bg-stone-50 -m-4">
+                                     <p class="text-sm text-gray-500">Jane Smith commented on Step 3:</p>
+                                     <p class="mt-1 bg-teal-50 p-3 rounded-md text-gray-700 font-medium border border-teal-200">"The node setup here is fantastic! Really great use of custom curves to get that effect."</p>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane hidden" id="marketplace">
+                        <div class="grid md:grid-cols-2 gap-12 items-center">
+                             <div>
+                                <h4 class="text-3xl font-bold text-teal-700 mb-4">Phase 3: The Talent Marketplace</h4>
+                                <p class="text-gray-600 mb-6">This phase directly connects a creator's portfolio to their earning potential. We will provide a seamless way for artists to monetize their skills and digital assets within the ecosystem they already trust and use daily.</p>
+                                <ul class="space-y-4">
+                                    <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Asset Storefront:</strong> Creators can turn assets from their breakdowns (e.g., a 3D model, a brush pack) into products for sale with one click.</div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Services Marketplace:</strong> A dedicated section on profiles for artists to list their freelance services, rates, and availability.</div>
+                                    </li>
+                                     <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Mentorship & Critiques:</strong> A platform for paid, private sessions with senior artists, creating a new revenue stream for experts.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                                 <div class="bg-gray-100 p-4 rounded-md">
+                                    <p class="font-semibold text-gray-700">Breakdown Step 4: Final Textures</p>
+                                    <div class="mt-3 bg-gray-200 h-24 rounded-md"></div>
+                                    <button class="w-full mt-4 bg-amber-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-amber-600 transition-colors shadow-md">Buy Texture Pack - $15</button>
+                                 </div>
+                                  <div class="mt-6 bg-gray-100 p-4 rounded-md">
+                                    <p class="font-semibold text-gray-700">Artist Profile: Jane Smith</p>
+                                    <button class="w-full mt-3 bg-teal-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-teal-600 transition-colors shadow-md">Book a 1-hr Mentorship Session</button>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane hidden" id="jobs">
+                         <div class="grid md:grid-cols-2 gap-12 items-center">
+                             <div>
+                                <h4 class="text-3xl font-bold text-teal-700 mb-4">Phase 4: The Job Hub</h4>
+                                <p class="text-gray-600 mb-6">The final phase transforms our platform into the ultimate hiring tool for the creative industry. By leveraging the rich data from the portfolio breakdowns, we will create a hyper-efficient and intelligent job market for both recruiters and artists.</p>
+                                <ul class="space-y-4">
+                                    <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Intelligent Search:</strong> A powerful engine allowing recruiters to find candidates based on specific skills and software demonstrated in their work.</div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Verified Recruiter Profiles:</strong> A system to verify company profiles, ensuring trust and legitimacy in job postings.</div>
+                                    </li>
+                                     <li class="flex items-start">
+                                        <span class="text-teal-500 font-bold text-2xl mr-3">●</span>
+                                        <div><strong class="text-gray-800">Integrated Hiring Workflow:</strong> Recruiters can view an artist's process, verify their skills, and initiate contact all in one place.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                                <div class="p-4 bg-stone-50 rounded-lg">
+                                    <p class="font-bold text-gray-700">Recruiter Search</p>
+                                    <div class="mt-4">
+                                        <label class="text-sm font-medium text-gray-600">Find Talent:</label>
+                                        <input type="text" value="Character Artist" class="w-full p-2 border rounded mt-1 bg-gray-100 text-gray-700">
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="text-sm font-medium text-gray-600">With Skills In:</label>
+                                        <div class="flex flex-wrap gap-2 mt-1">
+                                            <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">#ZBrush</span>
+                                            <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">#Texturing</span>
+                                            <span class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">#Rigging</span>
+                                        </div>
+                                    </div>
+                                    <button class="w-full mt-4 bg-teal-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-teal-600 transition-colors shadow-md">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="perfect-platform" class="py-16">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-bold text-gray-800">The Perfect Platform: A Feature Deep Dive</h3>
+                <p class="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">This is the ideal state of our platform, built upon our phased roadmap. It combines all features into a single, seamless, and powerful ecosystem. Explore the key feature areas below to see how we'll provide unparalleled value.</p>
+            </div>
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-2xl font-semibold text-gray-800">The Core Portfolio: The Power of Process</h4>
+                        <span class="text-2xl text-teal-600 transform transition-transform duration-300">+</span>
+                    </div>
+                    <div class="feature-content mt-4 hidden">
+                        <p class="text-gray-700">Our core offering revolutionizes the portfolio. The **Project Breakdown** feature allows artists to create a dynamic, step-by-step showcase of their work. This is not a static gallery; it’s a detailed narrative of their creative and technical journey.</p>
+                        <ul class="list-disc list-inside mt-4 text-gray-700 space-y-1">
+                            <li>**Interactive Breakdowns:** Go beyond final renders to display wireframes, layered files, and work-in-progress shots.</li>
+                            <li>**Rich Tagging:** Automatically tag projects with software and skills (e.g., #Maya, #ZBrush, #VFX) for advanced search capabilities.</li>
+                            <li>**Narrative Commentary:** Artists can add personal notes and explanations for each step, providing valuable context for both clients and peers.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-2xl font-semibold text-gray-800">The Dynamic Community: True Peer-to-Peer Connection</h4>
+                        <span class="text-2xl text-teal-600 transform transition-transform duration-300">+</span>
+                    </div>
+                    <div class="feature-content mt-4 hidden">
+                         <p class="text-gray-700">We will build a professional social network tailored specifically for creative professionals. Our **in-line commenting** allows for precise, contextual feedback on a specific step of a project. The **personalized feed** ensures users see content that is highly relevant to their interests, and dedicated forums allow for deep, technical discussions. This is a space built for collaboration and learning.</p>
+                    </div>
+                </div>
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-2xl font-semibold text-gray-800">The Intelligent Hiring Hub: The Right Talent, Instantly</h4>
+                        <span class="text-2xl text-teal-600 transform transition-transform duration-300">+</span>
+                    </div>
+                    <div class="feature-content mt-4 hidden">
+                        <p class="text-gray-700">We solve the biggest pain point for recruiters. Our platform’s **intelligent search** allows companies to find candidates based on the actual skills demonstrated in their work, not just what's on a resume. This creates an unparalleled level of precision in the hiring process.</p>
+                        <ul class="list-disc list-inside mt-4 text-gray-700 space-y-1">
+                            <li>**Skills-Based Search:** Find a character artist who specializes in ZBrush and has a proven track record in stylized assets.</li>
+                            <li>**Verified Profiles:** Recruiters can create verified company profiles to build trust with the community.</li>
+                            <li>**Integrated Workflow:** The hiring process is fully contained within the platform, from finding a candidate to reviewing their work and sending a message.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-2xl font-semibold text-gray-800">The Seamless Marketplace: From Passion to Profit</h4>
+                        <span class="text-2xl text-teal-600 transform transition-transform duration-300">+</span>
+                    </div>
+                    <div class="feature-content mt-4 hidden">
+                        <p class="text-gray-700">We empower creators to monetize their talent directly within the ecosystem. The platform acts as a bridge between a creator’s art and their income. This eliminates the need for multiple, disconnected platforms for sales, freelancing, and learning.</p>
+                        <ul class="list-disc list-inside mt-4 text-gray-700 space-y-1">
+                            <li>**Asset-to-Product:** Turn a 3D model from a project breakdown into a product for sale in a single click.</li>
+                            <li>**Service Listings:** Artists can offer freelance services and book paid critiques or mentorship sessions directly on their profiles.</li>
+                            <li>**Secure Payments:** All transactions are handled securely, building trust and providing a stable source of income.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="competitors" class="py-16">
+            <div class="text-center mb-12">
+                <h3 class="text-4xl font-bold text-gray-800">Our Competitive Edge</h3>
+                <p class="mt-3 text-lg text-gray-600 max-w-3xl mx-auto">Existing platforms solve parts of the problem, but none offer an integrated solution. Our advantage lies in creating a unified ecosystem built around the core value of a process-driven portfolio. Click on a competitor in the chart to see how we compare.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-xl border border-gray-200">
+                <div class="chart-container">
+                    <canvas id="competitorChart"></canvas>
+                </div>
+                <div id="competitor-info" class="mt-8 p-6 bg-stone-100 rounded-lg min-h-[100px] border border-stone-200">
+                    <p class="text-gray-600 italic text-center">Select a competitor from the chart to view our strategic advantage.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="py-24">
+            <div class="text-center mb-16">
+                <h3 class="text-4xl font-bold text-gray-800">Implementation Roadmap</h3>
+                <p class="mt-3 text-lg text-gray-600">Our development strategy is a phased release, ensuring we build a stable, valuable product at each step.</p>
+            </div>
+            <div class="flex items-center w-full max-w-5xl mx-auto justify-between">
+                <div class="flex flex-col items-center text-center">
+                    <div class="phase-node w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center text-center p-2 font-semibold cursor-pointer active" data-phase="portfolio">Phase 1 MVP</div>
+                    <div class="mt-3 font-medium text-gray-700">Core Portfolio</div>
+                </div>
+                <div class="phase-connector h-1 flex-1 mx-4"></div>
+                <div class="flex flex-col items-center text-center">
+                    <div class="phase-node w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center text-center p-2 font-semibold cursor-pointer" data-phase="community">Phase 2</div>
+                    <div class="mt-3 font-medium text-gray-700">Community Hub</div>
+                </div>
+                <div class="phase-connector h-1 flex-1 mx-4"></div>
+                <div class="flex flex-col items-center text-center">
+                    <div class="phase-node w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center text-center p-2 font-semibold cursor-pointer" data-phase="marketplace">Phase 3</div>
+                    <div class="mt-3 font-medium text-gray-700">Marketplace</div>
+                </div>
+                <div class="phase-connector h-1 flex-1 mx-4"></div>
+                <div class="flex flex-col items-center text-center">
+                    <div class="phase-node w-28 h-28 rounded-full bg-gray-300 flex items-center justify-center text-center p-2 font-semibold cursor-pointer" data-phase="jobs">Phase 4</div>
+                    <div class="mt-3 font-medium text-gray-700">Job Hub</div>
+                </div>
+            </div>
+            <div id="roadmap-info" class="mt-12 p-6 bg-stone-100 rounded-lg max-w-4xl mx-auto min-h-[120px] border border-stone-200">
+                <p class="text-gray-600 italic text-center">Click on a phase to learn more about our development plan.</p>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-stone-200">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600">
+            <p>&copy; 2025 Creative Hub. A new vision for the creative industry.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tab = button.dataset.tab;
+
+                    tabButtons.forEach(btn => btn.classList.remove('active-tab'));
+                    button.classList.add('active-tab');
+
+                    tabPanes.forEach(pane => {
+                        if (pane.id === tab) {
+                            pane.classList.remove('hidden');
+                            pane.classList.add('active');
+                        } else {
+                            pane.classList.add('hidden');
+                            pane.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            const competitorData = {
+                labels: ['Behance/Dribbble', 'ArtStation', 'LinkedIn', 'Upwork/Fiverr'],
+                datasets: [{
+                    label: 'Our Platform Advantage',
+                    data: [4, 3, 4, 4],
+                    backgroundColor: '#14B8A6',
+                    borderColor: '#0D9488',
+                    borderWidth: 1
+                }, {
+                    label: 'Existing Platform Score',
+                    data: [1, 2, 1, 1],
+                    backgroundColor: '#A8A29E',
+                    borderColor: '#78716C',
+                    borderWidth: 1
+                }]
+            };
+
+            const competitorInfo = {
+                'Behance/Dribbble': {
+                    title: 'Advantage over Behance / Dribbble',
+                    text: 'We are building a dynamic "Breakdown" portfolio, providing a structured, in-depth view of the creative process that these platforms lack. While they are strong for showcasing final work, they offer minimal insight into the skills and workflow behind it.'
+                },
+                'ArtStation': {
+                    title: 'Advantage over ArtStation',
+                    text: 'We will integrate the breakdown feature directly into the core portfolio, making it the standard for every project. This creates a richer, more educational experience for both creators and clients, moving beyond unstructured blog posts or image dumps.'
+                },
+                'LinkedIn': {
+                    title: 'Advantage over LinkedIn',
+                    text: 'We will offer a highly visual, specialized network where every connection is meaningful. The portfolio itself serves as the primary professional resume, providing far more context than a text-based profile and making it a superior tool for creative industry networking.'
+                },
+                'Upwork/Fiverr': {
+                    title: 'Advantage over Upwork / Fiverr',
+                    text: 'Our "Exchange" will focus on high-end creative services and assets, directly linking them to a professional\'s verified, process-oriented portfolio. This builds trust and moves beyond the low-value, one-off project model of generic freelance sites.'
+                }
+            };
+
+            const ctx = document.getElementById('competitorChart').getContext('2d');
+            const competitorChart = new Chart(ctx, {
+                type: 'bar',
+                data: competitorData,
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            },
+                            title: {
+                                display: true,
+                                text: 'Feature Integration Score',
+                                font: { weight: 'bold' }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: { weight: 'bold' }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + '/5';
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { weight: 'bold' }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Platform Feature Comparison',
+                            font: { size: 18, weight: 'bold' }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const competitorName = competitorData.labels[index];
+                            const info = competitorInfo[competitorName];
+                            const infoBox = document.getElementById('competitor-info');
+                            
+                            infoBox.innerHTML = `
+                                <h5 class="text-xl font-bold text-teal-700 mb-2">${info.title}</h5>
+                                <p class="text-gray-700">${info.text}</p>
+                            `;
+                        }
+                    }
+                }
+            });
+            
+            const roadmapInfo = {
+                'portfolio': {
+                    title: 'Phase 1 MVP: The Core Portfolio',
+                    text: 'We start by building the central, unique feature: the "Breakdown" portfolio. This phase focuses on user profiles, the editor for creating multi-step project breakdowns, and a public feed to display them. This core product will establish our brand and attract our initial user base.'
+                },
+                'community': {
+                    title: 'Phase 2: The Community Hub',
+                    text: 'Once we have a base of projects, we will introduce social features. This includes a personalized feed, in-line commenting on specific steps of a breakdown, direct messaging, and community forums to foster a truly engaged professional network.'
+                },
+                'marketplace': {
+                    title: 'Phase 3: The Talent Marketplace',
+                    text: 'This phase connects creativity to commerce. We will enable creators to sell digital assets directly from their portfolios, list their freelance services, and offer paid mentorship sessions, creating multiple revenue streams for our users.'
+                },
+                'jobs': {
+                    title: 'Phase 4: The Job Hub',
+                    text: 'The final step is to leverage all the data we\'ve collected. The Job Hub will offer an intelligent search engine for recruiters to find talent based on skills, software, and projects shown in our unique breakdowns. This will make hiring more efficient for the entire industry.'
+                }
+            };
+            
+            const phaseNodes = document.querySelectorAll('.phase-node');
+            const roadmapInfoBox = document.getElementById('roadmap-info');
+            
+            phaseNodes.forEach(node => {
+                node.addEventListener('click', () => {
+                    const phase = node.dataset.phase;
+                    const info = roadmapInfo[phase];
+                    
+                    document.getElementById('solution').scrollIntoView({ behavior: 'smooth' });
+                    
+                    const targetTabButton = document.querySelector(`.tab-btn[data-tab="${phase}"]`);
+                    if(targetTabButton) {
+                        targetTabButton.click();
+                    }
+                    
+                    phaseNodes.forEach(n => n.classList.remove('active'));
+                    node.classList.add('active');
+                    
+                    roadmapInfoBox.innerHTML = `
+                        <h5 class="text-xl font-bold text-teal-700 mb-2">${info.title}</h5>
+                        <p class="text-gray-700">${info.text}</p>
+                    `;
+                });
+            });
+            
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const content = card.querySelector('.feature-content');
+                    const icon = card.querySelector('span');
+                    
+                    content.classList.toggle('hidden');
+                    if (content.classList.contains('hidden')) {
+                        icon.textContent = '+';
+                    } else {
+                        icon.textContent = '−';
+                    }
+                });
+            });
+            
+             // Set initial content for roadmap info box
+            const initialPhase = document.querySelector('.phase-node.active').dataset.phase;
+            if (roadmapInfo[initialPhase]) {
+                roadmapInfoBox.innerHTML = `
+                    <h5 class="text-xl font-bold text-teal-700 mb-2">${roadmapInfo[initialPhase].title}</h5>
+                    <p class="text-gray-700">${roadmapInfo[initialPhase].text}</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
